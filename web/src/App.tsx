@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import Dashboard from './pages/Dashboard';
 import AddProduct from './pages/AddProduct';
 import OrderDetail from './pages/OrderDetail';
+import Profile from './pages/Profile';
 import NotificationBell from './components/NotificationBell';
 import { useAuth } from './hooks/useAuth';
 
@@ -45,6 +46,7 @@ export default function App(): JSX.Element {
           {user ? (
             <>
               <Link to="/dashboard" style={{ textDecoration: 'none', color: '#64748B', fontWeight: 500 }}>Dashboard</Link>
+              <Link to="/profile" style={{ textDecoration: 'none', color: '#64748B', fontWeight: 500 }}>Profile</Link>
               <NotificationBell />
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span style={{ color: '#2F9E44', fontWeight: 600 }}>👋 {user.name}</span>
@@ -100,6 +102,7 @@ export default function App(): JSX.Element {
         <Route path="/products/new" element={<AddProduct />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/orders/:id" element={<OrderDetail />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
