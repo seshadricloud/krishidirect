@@ -1,0 +1,62 @@
+/* paste the home css you already have or use a minimal version */
+:root{--green:#2F9E44;--muted:#5B6B72;--container:1100px}
+body{margin:0;font-family:Inter,system-ui,Arial;background:#fff;color:#0F172A}
+.container{max-width:var(--container);margin:0 auto;padding:0 16px}
+.kd-header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee}
+.btn{padding:10px 16px;border-radius:999px}
+
+/* Header */
+.kd-header{position:sticky;top:0;background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(255,255,255,0.6));backdrop-filter: blur(6px);z-index:40;border-bottom:1px solid rgba(15,23,42,0.04)}
+.kd-header .container{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.brand{font-weight:700;color:var(--green);font-size:20px}
+.nav{margin-left:24px;flex:1}
+.nav a{margin-right:16px;color:var(--muted);text-decoration:none}
+.cta .btn{margin-left:8px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:600}
+.btn-primary{background:linear-gradient(90deg,#2F9E44,#66BB6A);color:#fff;box-shadow:0 8px 20px rgba(47,158,68,0.12)}
+.btn-outline{border:2px solid #2F9E44;background:#fff;color:#2F9E44}
+.btn-ghost{background:transparent;color:var(--green)}
+
+/* Hero */
+.hero{padding:48px 0;background:linear-gradient(135deg,#F7FFF6, #FFF8F2)}
+.hero-grid{display:grid;grid-template-columns:1fr 520px;align-items:center;gap:28px}
+.hero-content h1{font-size:42px;line-height:1.05;margin:0 0 12px}
+.lead{font-size:18px;color:var(--muted);margin:0 0 18px}
+.hero-illustration{width:100%;max-width:520px;border-radius:18px;box-shadow:0 20px 40px rgba(15,23,42,0.06)}
+
+/* Features */
+.features{padding:48px 0}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.card{background:var(--card);padding:18px;border-radius:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.card .icon{width:48px;height:48px}
+
+/* App showcase */
+.app-showcase{padding:40px 0}
+.screens{display:flex;gap: -40px;justify-content:center;align-items:center}
+.screen{width:200px;border-radius:24px;box-shadow:0 24px 60px rgba(15,23,42,0.08);transform-origin:center}
+
+/* How it works */
+.how{padding:40px 0}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{background:#fff;padding:16px;border-radius:10px; text-align:center;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+.step .num{background:var(--green-soft);width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;margin-bottom:8px}
+
+/* Testimonials, Download, Footer */
+.testimonials{padding:32px 0}
+.download{padding:48px 0;background:linear-gradient(135deg,var(--green-soft),#fff9f2)}
+.footer{padding:28px 0;background:#f2f8f4;color:var(--muted)}
+
+/* Responsive */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr;gap:20px}
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .feature-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .hero-content h1{font-size:28px}
+  .hero-illustration{max-width:100%}
+}

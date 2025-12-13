@@ -1,0 +1,68 @@
+<svg width="300" height="600" viewBox="0 0 300 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Phone Frame -->
+  <rect width="300" height="600" rx="30" fill="#1E293B"/>
+  <rect x="10" y="10" width="280" height="580" rx="25" fill="#0F172A"/>
+  
+  <!-- Screen -->
+  <rect x="20" y="50" width="260" height="520" rx="10" fill="#FFFFFF"/>
+  
+  <!-- Status Bar -->
+  <rect x="20" y="20" width="260" height="20" fill="#0F172A"/>
+  <text x="40" y="35" font-family="Arial" font-size="12" fill="#94A3B8">9:41</text>
+  <circle cx="260" cy="30" r="3" fill="#10B981"/>
+  
+  <!-- Header -->
+  <rect x="20" y="50" width="260" height="60" fill="#2F9E44"/>
+  <text x="40" y="85" font-family="Arial" font-size="18" fill="#FFFFFF" font-weight="bold">My Products</text>
+  <circle cx="250" cy="80" r="15" fill="#34D399"/>
+  <text x="245" y="87" font-family="Arial" font-size="20" fill="#FFFFFF">+</text>
+  
+  <!-- Product Cards -->
+  <g transform="translate(30, 120)">
+    <rect width="240" height="100" rx="12" fill="#F8FAFC"/>
+    <rect x="10" y="10" width="80" height="80" rx="8" fill="#E0F2FE"/>
+    <circle cx="50" cy="50" r="20" fill="#BFDBFE"/>
+    <path d="M 40 45 L 45 50 L 55 40" stroke="#2563EB" stroke-width="3" stroke-linecap="round" fill="none"/>
+    
+    <text x="100" y="30" font-family="Arial" font-size="14" fill="#0F172A" font-weight="bold">Organic Tomatoes</text>
+    <text x="100" y="50" font-family="Arial" font-size="12" fill="#64748B">50 kg available</text>
+    <text x="100" y="75" font-family="Arial" font-size="16" fill="#2F9E44" font-weight="bold">₹45/kg</text>
+  </g>
+  
+  <g transform="translate(30, 235)">
+    <rect width="240" height="100" rx="12" fill="#F8FAFC"/>
+    <rect x="10" y="10" width="80" height="80" rx="8" fill="#FEF3C7"/>
+    <circle cx="50" cy="50" r="20" fill="#FDE68A"/>
+    <path d="M 45 40 L 50 50 L 55 45" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" fill="none"/>
+    
+    <text x="100" y="30" font-family="Arial" font-size="14" fill="#0F172A" font-weight="bold">Fresh Potatoes</text>
+    <text x="100" y="50" font-family="Arial" font-size="12" fill="#64748B">100 kg available</text>
+    <text x="100" y="75" font-family="Arial" font-size="16" fill="#2F9E44" font-weight="bold">₹25/kg</text>
+  </g>
+  
+  <g transform="translate(30, 350)">
+    <rect width="240" height="100" rx="12" fill="#F8FAFC"/>
+    <rect x="10" y="10" width="80" height="80" rx="8" fill="#DCFCE7"/>
+    <circle cx="50" cy="50" r="20" fill="#BBF7D0"/>
+    <ellipse cx="50" cy="50" rx="8" ry="15" fill="#22C55E"/>
+    
+    <text x="100" y="30" font-family="Arial" font-size="14" fill="#0F172A" font-weight="bold">Green Spinach</text>
+    <text x="100" y="50" font-family="Arial" font-size="12" fill="#64748B">30 kg available</text>
+    <text x="100" y="75" font-family="Arial" font-size="16" fill="#2F9E44" font-weight="bold">₹60/kg</text>
+  </g>
+  
+  <!-- Bottom Navigation -->
+  <rect x="20" y="520" width="260" height="60" fill="#F8FAFC"/>
+  <g transform="translate(60, 540)">
+    <rect width="40" height="40" rx="20" fill="#2F9E44"/>
+    <path d="M 15 20 L 20 15 L 25 20 M 20 15 L 20 30" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </g>
+  <g transform="translate(140, 540)">
+    <circle cx="20" cy="20" r="15" fill="#E2E8F0"/>
+    <path d="M 12 20 L 28 20 M 20 12 L 20 28" stroke="#64748B" stroke-width="2"/>
+  </g>
+  <g transform="translate(200, 540)">
+    <circle cx="20" cy="20" r="15" fill="#E2E8F0"/>
+    <circle cx="20" cy="20" r="8" fill="#64748B"/>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40" fill="none">
+  <defs>
+    <linearGradient id="krishiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6FCF97"/>
+      <stop offset="100%" stop-color="#2F9E44"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Leaf icon with circle background -->
+  <circle cx="20" cy="20" r="16" fill="url(#krishiGrad)" opacity="0.9"/>
+  
+  <!-- Leaf shape -->
+  <path d="M14 22c3-4 8-7 12-10 0 0-7 2-11 6-4 4-3 6-1 4z" fill="#fff" opacity="0.95" stroke="#fff" stroke-width="0.5"/>
+  <path d="M18 24c2-2 4-4 6-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Text: Krishi -->
+  <text x="48" y="27" font-family="Inter, system-ui, Arial, sans-serif" font-weight="700" font-size="16" fill="#0F172A" letter-spacing="-0.5">
+    Krishi
+  </text>
+  
+  <!-- Text: Direct -->
+  <text x="100" y="27" font-family="Inter, system-ui, Arial, sans-serif" font-weight="700" font-size="16" fill="#2F9E44" letter-spacing="-0.5">
+    Direct
+  </text>
+</svg>
