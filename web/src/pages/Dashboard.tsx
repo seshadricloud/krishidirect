@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
 
@@ -29,6 +29,7 @@ interface Order {
 
 export default function Dashboard(): JSX.Element {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -291,6 +292,26 @@ export default function Dashboard(): JSX.Element {
                       {item.product.name} - {item.quantity} {item.product.unit} @ ₹{item.price}/{item.product.unit}
                     </div>
                   ))}
+
+                <button
+                  onClick={() => navigate(`/orders/${order.id}`)}
+                  style={{
+                    marginTop: 12,
+                    padding: '8px 16px',
+                    background: '#10b981',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 8,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#059669'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#10b981'}
+                >
+                  View Details & Track Order →
+                </button>
                 </div>
               </div>
             ))}
