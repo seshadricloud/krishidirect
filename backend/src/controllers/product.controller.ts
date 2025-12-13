@@ -41,7 +41,7 @@ export async function createProduct(req: Request, res: Response) {
       return res.status(401).json({ message: 'Authentication required' });
     }
 
-    const { name, description, price, quantity, unit, category, image, location } = req.body;
+    const { name, description, price, quantity, unit, category, image, images, location } = req.body;
 
     if (!name || !price || !quantity) {
       return res.status(400).json({ message: 'Name, price, and quantity are required' });
@@ -55,6 +55,7 @@ export async function createProduct(req: Request, res: Response) {
       unit: unit || 'kg',
       category,
       image,
+      images: images || [],
       location,
       userId
     };

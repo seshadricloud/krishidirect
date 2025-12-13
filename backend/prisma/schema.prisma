@@ -40,6 +40,7 @@ model Product {
   unit        String   @default("kg")
   category    String?
   image       String?
+  images      String[] @default([])
   location    String?
   latitude    Float?
   longitude   Float?

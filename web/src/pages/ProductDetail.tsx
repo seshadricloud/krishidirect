@@ -74,12 +74,46 @@ export default function ProductDetail() {
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            {product.image && (
+            {/* Image Carousel */}
+            {product.images && product.images.length > 0 ? (
+              <div className="space-y-4">
+                {/* Main Image */}
+                <div className="relative">
+                  <img 
+                    src={product.images[0]} 
+                    alt={product.name}
+                    className="w-full h-96 object-cover rounded-lg"
+                  />
+                </div>
+                
+                {/* Thumbnail Grid */}
+                {product.images.length > 1 && (
+                  <div className="grid grid-cols-5 gap-2">
+                    {product.images.map((img: string, index: number) => (
+                      <img
+                        key={index}
+                        src={img}
+                        alt={`${product.name} ${index + 1}`}
+                        className="w-full h-20 object-cover rounded-lg cursor-pointer border-2 border-gray-300 hover:border-green-600 transition"
+                        onClick={(e) => {
+                          const mainImg = e.currentTarget.parentElement?.parentElement?.querySelector('img');
+                          if (mainImg) mainImg.src = img;
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : product.image ? (
               <img 
                 src={product.image} 
                 alt={product.name}
                 className="w-full h-96 object-cover rounded-lg"
               />
+            ) : (
+              <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                <span className="text-gray-400">No image available</span>
+              </div>
             )}
           </div>
           <div>

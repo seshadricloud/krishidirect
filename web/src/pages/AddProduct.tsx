@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
+import { ImageUpload } from '../components/ImageUpload';
 
 const CATEGORIES = [
   'Vegetables',
@@ -25,7 +26,7 @@ export default function AddProduct(): JSX.Element {
     quantity: '',
     unit: 'kg',
     category: 'Vegetables',
-    image: '',
+    images: [] as string[],
     location: ''
   });
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,10 @@ export default function AddProduct(): JSX.Element {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  }
+
+  function handleImagesChange(images: string[]) {
+    setFormData(prev => ({ ...prev, images }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -53,7 +58,8 @@ export default function AddProduct(): JSX.Element {
         quantity: parseFloat(formData.quantity),
         unit: formData.unit,
         category: formData.category,
-        image: formData.image || undefined,
+        image: formData.images[0] || undefined,
+        images: formData.images,
         location: formData.location || undefined
       });
 
@@ -239,38 +245,12 @@ export default function AddProduct(): JSX.Element {
           />
         </label>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Image URL</span>
-          <input
-            type="url"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="https://example.com/crop-image.jpg"
-            style={{ 
-              padding: '12px 16px', 
-              border: '1px solid #d1d5db', 
-              borderRadius: 8,
-              fontSize: 16
-            }}
-          />
-          <span style={{ fontSize: 12, color: '#6b7280' }}>
-            Tip: Upload to Imgur or use Unsplash URLs
-          </span>
-        </label>
-
-        {formData.image && (
-          <div style={{ border: '1px solid #d1d5db', borderRadius: 8, overflow: 'hidden' }}>
-            <img 
-              src={formData.image} 
-              alt="Preview" 
-              style={{ width: '100%', height: 200, objectFit: 'cover' }}
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          </div>
-        )}
+        <ImageUpload 
+          images={formData.images}
+          onImagesChange={handleImagesChange}
+          maxImages={5}
+          maxSizeMB={2}
+        />
 
         <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
           <button
