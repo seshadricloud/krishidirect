@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import Dashboard from './pages/Dashboard';
 import AddProduct from './pages/AddProduct';
 import OrderDetail from './pages/OrderDetail';
+import NotificationBell from './components/NotificationBell';
 import { useAuth } from './hooks/useAuth';
 
 export default function App(): JSX.Element {
@@ -44,6 +45,7 @@ export default function App(): JSX.Element {
           {user ? (
             <>
               <Link to="/dashboard" style={{ textDecoration: 'none', color: '#64748B', fontWeight: 500 }}>Dashboard</Link>
+              <NotificationBell />
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span style={{ color: '#2F9E44', fontWeight: 600 }}>👋 {user.name}</span>
                 <button
