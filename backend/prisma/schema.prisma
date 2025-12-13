@@ -49,17 +49,24 @@ model Product {
 }
 
 model Order {
-  id          String      @id @default(cuid())
-  orderNumber String      @unique @default(cuid())
-  buyerId     String
-  buyer       User        @relation(fields: [buyerId], references: [id], onDelete: Cascade)
-  status      String      @default("pending") // pending, confirmed, shipped, delivered, cancelled
-  totalAmount Float
-  paymentStatus String    @default("pending") // pending, paid, failed
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique @default(cuid())
+  buyerId         String
+  buyer           User        @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  status          String      @default("pending") // pending, confirmed, shipped, delivered, cancelled
+  totalAmount     Float
+  paymentStatus   String      @default("pending") // pending, paid, failed
   deliveryAddress String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  items       OrderItem[]
+  notes           String?
+  estimatedDelivery DateTime?
+  confirmedAt     DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  cancelledAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
 }
 
 model OrderItem {
@@ -94,6 +101,15 @@ model Message {
   content    String
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    String
+  notes     String?
+  createdAt DateTime @default(now())
 }
 
 model PriceHistory {

@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp';
 import Products from './pages/Products';
 import Dashboard from './pages/Dashboard';
 import AddProduct from './pages/AddProduct';
+import OrderDetail from './pages/OrderDetail';
 import { useAuth } from './hooks/useAuth';
 
 export default function App(): JSX.Element {
@@ -96,6 +97,7 @@ export default function App(): JSX.Element {
         <Route path="/products" element={<Products />} />
         <Route path="/products/new" element={<AddProduct />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/orders/:id" element={<OrderDetail />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>

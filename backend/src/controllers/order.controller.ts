@@ -267,9 +267,71 @@ export async function updateOrderStatus(req: Request, res: Response) {
       }
     });
 
+    // Create status history entry
+    await db.orderStatusHistory.create({
+      data: {
+        orderId: order.id,
+        status,
+        notes: `Order status updated to ${status}`
+      }
+    });
+
     res.json(order);
   } catch (err) {
     console.error('Update order error:', err);
+    res.status(500).json({ message: (err as Error).message });
+  }
+}
+
+// Get order status history
+export async function getOrderStatusHistory(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
+    const db = await getPrisma();
+
+    // Check if user has access to this order
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: {
+          include: {
+            product: {
+              include: {
+                user: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Check if user is buyer or seller
+    const isBuyer = order.buyerId === userId;
+    const isSeller = order.items.some((item: any) => item.product.userId === userId);
+
+    if (!isBuyer && !isSeller) {
+      return res.status(403).json({ message: 'Not authorized to view this order' });
+    }
+
+    // Get status history
+    const history = await db.orderStatusHistory.findMany({
+      where: { orderId },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    res.json(history);
+  } catch (err) {
+    console.error('Get order history error:', err);
     res.status(500).json({ message: (err as Error).message });
   }
 }
