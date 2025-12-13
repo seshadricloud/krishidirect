@@ -28,6 +28,7 @@ model User {
   notifications Notification[]
   sentMessages  Message[]      @relation("SentMessages")
   receivedMessages Message[]   @relation("ReceivedMessages")
+  reviews       Review[]       @relation("UserReviews")
 }
 
 model Product {
@@ -47,6 +48,7 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orderItems  OrderItem[]
+  reviews     Review[]
 }
 
 model Order {
@@ -111,6 +113,20 @@ model OrderStatusHistory {
   status    String
   notes     String?
   createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, userId]) // One review per user per product
 }
 
 model PriceHistory {
