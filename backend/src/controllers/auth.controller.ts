@@ -166,6 +166,112 @@ class AuthController {
             res.status(404).json({ message: (err as Error).message });
         }
     }
+
+    // Update user profile
+    async updateProfile(req: Request, res: Response) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ message: 'Not authenticated' });
+            }
+
+            const { name, email, phone, address, profileImage } = req.body;
+
+            const db = await getPrisma();
+            if (!db) {
+                return res.status(500).json({ message: 'Database connection failed' });
+            }
+
+            // Check if email is already taken by another user
+            if (email) {
+                const existingUser = await db.user.findFirst({
+                    where: {
+                        email,
+                        NOT: { id: userId }
+                    }
+                });
+                if (existingUser) {
+                    return res.status(400).json({ message: 'Email already in use' });
+                }
+            }
+
+            const user = await db.user.update({
+                where: { id: userId },
+                data: {
+                    name,
+                    email,
+                    phone,
+                    address,
+                    profileImage
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    role: true,
+                    phone: true,
+                    address: true,
+                    profileImage: true,
+                    createdAt: true
+                }
+            });
+
+            res.json(user);
+        } catch (err) {
+            console.error('Update profile error:', err);
+            res.status(500).json({ message: (err as Error).message });
+        }
+    }
+
+    // Change password
+    async changePassword(req: Request, res: Response) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ message: 'Not authenticated' });
+            }
+
+            const { currentPassword, newPassword } = req.body;
+
+            if (!currentPassword || !newPassword) {
+                return res.status(400).json({ message: 'Current and new password are required' });
+            }
+
+            if (newPassword.length < 6) {
+                return res.status(400).json({ message: 'New password must be at least 6 characters' });
+            }
+
+            const db = await getPrisma();
+            if (!db) {
+                return res.status(500).json({ message: 'Database connection failed' });
+            }
+
+            const user = await db.user.findUnique({ where: { id: userId } });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Verify current password
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Current password is incorrect' });
+            }
+
+            // Hash new password
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update password
+            await db.user.update({
+                where: { id: userId },
+                data: { password: hashedPassword }
+            });
+
+            res.json({ message: 'Password changed successfully' });
+        } catch (err) {
+            console.error('Change password error:', err);
+            res.status(500).json({ message: (err as Error).message });
+        }
+    }
 }
 
 export const authController = new AuthController();
