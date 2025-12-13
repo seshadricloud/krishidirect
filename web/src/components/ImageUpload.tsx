@@ -86,29 +86,86 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   return (
-    <div>
-      <label className="block text-gray-700 font-medium mb-2">
+    <div style={{ marginBottom: '20px' }}>
+      <label style={{ 
+        display: 'block',
+        fontWeight: 600,
+        marginBottom: '12px',
+        fontSize: '16px',
+        color: '#374151'
+      }}>
         Product Images (Max {maxImages})
       </label>
 
       {/* Image Grid */}
       {images.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+          gap: '16px',
+          marginBottom: '20px'
+        }}>
           {images.map((image, index) => (
-            <div key={index} className="relative group">
+            <div 
+              key={index} 
+              style={{ 
+                position: 'relative',
+                paddingBottom: '100%',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                border: '2px solid #e5e7eb'
+              }}
+            >
               <img
                 src={image}
                 alt={`Product ${index + 1}`}
-                className="w-full h-32 object-cover rounded-lg border-2 border-gray-300"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
               />
               
               {/* Image controls overlay */}
-              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                  opacity: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'opacity 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
+              >
                 {index > 0 && (
                   <button
                     type="button"
                     onClick={() => moveImage(index, 'left')}
-                    className="bg-white text-gray-800 p-2 rounded-full hover:bg-gray-200"
+                    style={{
+                      backgroundColor: 'white',
+                      color: '#374151',
+                      border: 'none',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                     title="Move left"
                   >
                     ←
@@ -118,7 +175,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 <button
                   type="button"
                   onClick={() => removeImage(index)}
-                  className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
+                  style={{
+                    backgroundColor: '#dc2626',
+                    color: 'white',
+                    border: 'none',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                   title="Remove"
                 >
                   ✕
@@ -128,7 +197,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                   <button
                     type="button"
                     onClick={() => moveImage(index, 'right')}
-                    className="bg-white text-gray-800 p-2 rounded-full hover:bg-gray-200"
+                    style={{
+                      backgroundColor: 'white',
+                      color: '#374151',
+                      border: 'none',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                     title="Move right"
                   >
                     →
@@ -138,7 +219,17 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
               {/* Primary badge */}
               {index === 0 && (
-                <div className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded">
+                <div style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: '8px',
+                  backgroundColor: '#10b981',
+                  color: 'white',
+                  fontSize: '12px',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontWeight: 600
+                }}>
                   Primary
                 </div>
               )}
@@ -155,24 +246,70 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             accept="image/*"
             multiple
             onChange={handleFileChange}
-            className="hidden"
-            id="image-upload"
+            style={{ display: 'none' }}
+            id="image-upload-input"
           />
           <label
-            htmlFor="image-upload"
-            className="inline-block bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 cursor-pointer transition"
+            htmlFor="image-upload-input"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '32px',
+              border: '2px dashed #d1d5db',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              backgroundColor: '#f9fafb',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#10b981';
+              e.currentTarget.style.backgroundColor = '#f0fdf4';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#d1d5db';
+              e.currentTarget.style.backgroundColor = '#f9fafb';
+            }}
           >
-            {images.length === 0 ? 'Upload Images' : 'Add More Images'}
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '12px',
+              color: '#10b981'
+            }}>
+              📸
+            </div>
+            <div style={{ 
+              fontSize: '16px', 
+              fontWeight: 600,
+              color: '#374151',
+              marginBottom: '4px'
+            }}>
+              {images.length === 0 ? 'Upload Product Images' : 'Add More Images'}
+            </div>
+            <div style={{ 
+              fontSize: '14px',
+              color: '#6b7280',
+              textAlign: 'center'
+            }}>
+              Click to browse or drag and drop<br />
+              {images.length} / {maxImages} images • Max {maxSizeMB}MB each
+            </div>
           </label>
-          <p className="text-sm text-gray-500 mt-2">
-            {images.length} / {maxImages} images • Max {maxSizeMB}MB each
-          </p>
         </div>
       )}
 
       {/* Error message */}
       {error && (
-        <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div style={{
+          marginTop: '12px',
+          padding: '12px',
+          backgroundColor: '#fef2f2',
+          border: '1px solid #fecaca',
+          borderRadius: '8px',
+          color: '#dc2626',
+          fontSize: '14px'
+        }}>
           {error}
         </div>
       )}

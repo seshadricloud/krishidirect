@@ -82,10 +82,20 @@ export default function AddProduct(): JSX.Element {
 
   return (
     <div className="container" style={{ padding: '40px 0', maxWidth: 600 }}>
-      <h1>Add New Crop Listing</h1>
-      <p style={{ color: '#6b7280', marginBottom: 32 }}>
-        List your fresh produce and connect directly with buyers
-      </p>
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: 32,
+        padding: '24px',
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        borderRadius: '16px',
+        color: 'white'
+      }}>
+        <div style={{ fontSize: '48px', marginBottom: '12px' }}>🌾</div>
+        <h1 style={{ color: 'white', marginBottom: '8px' }}>Add New Crop Listing</h1>
+        <p style={{ color: 'rgba(255,255,255,0.9)', margin: 0 }}>
+          List your fresh produce and connect directly with buyers
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {error && (
@@ -95,7 +105,9 @@ export default function AddProduct(): JSX.Element {
         )}
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Crop Name *</span>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>🌱</span> Crop Name *
+          </span>
           <input
             type="text"
             name="name"
@@ -113,7 +125,9 @@ export default function AddProduct(): JSX.Element {
         </label>
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Category *</span>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>📂</span> Category *
+          </span>
           <select
             name="category"
             value={formData.category}
@@ -132,7 +146,9 @@ export default function AddProduct(): JSX.Element {
         </label>
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Description</span>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>📝</span> Description
+          </span>
           <textarea
             name="description"
             value={formData.description}
@@ -149,55 +165,66 @@ export default function AddProduct(): JSX.Element {
           />
         </label>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <span style={{ fontWeight: 600 }}>Price per Unit *</span>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
-                ₹
-              </span>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-                style={{ 
-                  padding: '12px 16px 12px 32px', 
-                  border: '1px solid #d1d5db', 
-                  borderRadius: 8,
-                  fontSize: 16,
-                  width: '100%'
-                }}
-              />
-            </div>
-          </label>
-
-          <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <span style={{ fontWeight: 600 }}>Unit</span>
-            <select
-              name="unit"
-              value={formData.unit}
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>💰</span> Price per Unit *
+          </span>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <span style={{ 
+              position: 'absolute', 
+              left: 16, 
+              color: '#6b7280',
+              fontSize: 16,
+              pointerEvents: 'none'
+            }}>
+              ₹
+            </span>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
               onChange={handleChange}
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              required
               style={{ 
-                padding: '12px 16px', 
+                padding: '12px 16px 12px 32px', 
                 border: '1px solid #d1d5db', 
                 borderRadius: 8,
-                fontSize: 16
+                fontSize: 16,
+                width: '100%',
+                boxSizing: 'border-box'
               }}
-            >
-              {UNITS.map(unit => (
-                <option key={unit} value={unit}>{unit}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+            />
+          </div>
+        </label>
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Available Quantity *</span>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>⚖️</span> Unit *
+          </span>
+          <select
+            name="unit"
+            value={formData.unit}
+            onChange={handleChange}
+            style={{ 
+              padding: '12px 16px', 
+              border: '1px solid #d1d5db', 
+              borderRadius: 8,
+              fontSize: 16
+            }}
+          >
+            {UNITS.map(unit => (
+              <option key={unit} value={unit}>{unit}</option>
+            ))}
+          </select>
+        </label>
+
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>📦</span> Available Quantity *
+          </span>
           <div style={{ display: 'flex', gap: 8 }}>
             <input
               type="number"
@@ -229,7 +256,9 @@ export default function AddProduct(): JSX.Element {
         </label>
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontWeight: 600 }}>Location</span>
+          <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '20px' }}>📍</span> Location
+          </span>
           <input
             type="text"
             name="location"
@@ -245,12 +274,28 @@ export default function AddProduct(): JSX.Element {
           />
         </label>
 
-        <ImageUpload 
-          images={formData.images}
-          onImagesChange={handleImagesChange}
-          maxImages={5}
-          maxSizeMB={2}
-        />
+        <div style={{ 
+          padding: '20px',
+          border: '2px dashed #d1d5db',
+          borderRadius: 12,
+          backgroundColor: '#f9fafb'
+        }}>
+          <div style={{ 
+            fontWeight: 600, 
+            marginBottom: 12,
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 8 
+          }}>
+            <span style={{ fontSize: '20px' }}>📸</span> Product Images
+          </div>
+          <ImageUpload 
+            images={formData.images}
+            onImagesChange={handleImagesChange}
+            maxImages={5}
+            maxSizeMB={2}
+          />
+        </div>
 
         <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
           <button
