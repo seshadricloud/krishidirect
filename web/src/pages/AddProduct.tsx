@@ -143,52 +143,44 @@ export default function AddProduct(): JSX.Element {
           />
         </label>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <span style={{ fontWeight: 600 }}>Price per Unit *</span>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>
-                ₹
-              </span>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-                style={{ 
-                  padding: '12px 16px 12px 32px', 
-                  border: '1px solid #d1d5db', 
-                  borderRadius: 8,
-                  fontSize: 16,
-                  width: '100%'
-                }}
-              />
-            </div>
-          </label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontWeight: 600 }}>Price per Unit (₹) *</span>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            required
+            style={{ 
+              padding: '12px 16px', 
+              border: '1px solid #d1d5db', 
+              borderRadius: 8,
+              fontSize: 16
+            }}
+          />
+        </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <span style={{ fontWeight: 600 }}>Unit</span>
-            <select
-              name="unit"
-              value={formData.unit}
-              onChange={handleChange}
-              style={{ 
-                padding: '12px 16px', 
-                border: '1px solid #d1d5db', 
-                borderRadius: 8,
-                fontSize: 16
-              }}
-            >
-              {UNITS.map(unit => (
-                <option key={unit} value={unit}>{unit}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontWeight: 600 }}>Unit *</span>
+          <select
+            name="unit"
+            value={formData.unit}
+            onChange={handleChange}
+            style={{ 
+              padding: '12px 16px', 
+              border: '1px solid #d1d5db', 
+              borderRadius: 8,
+              fontSize: 16
+            }}
+          >
+            {UNITS.map(unit => (
+              <option key={unit} value={unit}>{unit}</option>
+            ))}
+          </select>
+        </label>
 
         <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <span style={{ fontWeight: 600 }}>Available Quantity *</span>
