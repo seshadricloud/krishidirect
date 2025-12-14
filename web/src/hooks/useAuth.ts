@@ -36,5 +36,5 @@ export function useAuth() {
     navigate('/login');
   }
 
-  return { user, loading, logout, refreshAuth: checkAuth };
+  return { user, setUser, loading, logout, refreshAuth: checkAuth };
 }

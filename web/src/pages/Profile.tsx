@@ -5,7 +5,7 @@ import api from '../api';
 
 export default function Profile(): JSX.Element {
   const navigate = useNavigate();
-  const { user, setUser } = useAuth();
+  const { user, setUser, refreshAuth } = useAuth();
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'earnings'>('profile');
   
   // Profile form
@@ -38,6 +38,7 @@ export default function Profile(): JSX.Element {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('Profile useEffect - user changed:', user);
     if (user) {
       setProfileData({
         name: user.name || '',
@@ -47,6 +48,13 @@ export default function Profile(): JSX.Element {
       });
       setProfileImage(user.profileImage || '');
       setImagePreview(user.profileImage || '');
+      
+      console.log('Profile form updated with:', {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address
+      });
       
       if (user.role === 'farmer') {
         fetchStats();
@@ -77,7 +85,15 @@ export default function Profile(): JSX.Element {
   }
 
   function handleProfileChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setProfileData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    
+    // Filter phone to only numeric and limit to 10 digits
+    if (name === 'phone') {
+      const numericValue = value.replace(/\D/g, '').slice(0, 10);
+      setProfileData(prev => ({ ...prev, [name]: numericValue }));
+    } else {
+      setProfileData(prev => ({ ...prev, [name]: value }));
+    }
   }
 
   function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -98,8 +114,10 @@ export default function Profile(): JSX.Element {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-        setProfileImage(reader.result as string);
+        const base64 = reader.result as string;
+        console.log('Image selected, base64 length:', base64.length);
+        setImagePreview(base64);
+        setProfileImage(base64);
       };
       reader.readAsDataURL(file);
       setError(null);
@@ -110,6 +128,12 @@ export default function Profile(): JSX.Element {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    // Validate phone if provided
+    if (profileData.phone && profileData.phone.length !== 10) {
+      return setError('Phone number must be exactly 10 digits');
+    }
+
     setLoading(true);
 
     try {
@@ -118,10 +142,57 @@ export default function Profile(): JSX.Element {
         profileImage
       });
       
+      console.log('Profile update response:', response.data);
+      console.log('Response has phone:', response.data.phone);
+      console.log('Response has profileImage:', response.data.profileImage ? 'YES (length: ' + response.data.profileImage.length + ')' : 'NO');
+      
+      // Update local user state immediately
       setUser(response.data);
-      setSuccess('Profile updated successfully!');
-      setTimeout(() => setSuccess(null), 3000);
+      
+      // Update form data immediately with the response
+      setProfileData({
+        name: response.data.name || '',
+        email: response.data.email || '',
+        phone: response.data.phone || '',
+        address: response.data.address || ''
+      });
+      
+      // Update profile image - preserve current preview if backend doesn't return it
+      const updatedImage = response.data.profileImage || profileImage;
+      console.log('Updating image state:', {
+        fromBackend: response.data.profileImage ? 'YES' : 'NO',
+        currentImage: profileImage ? 'EXISTS' : 'NONE',
+        willSet: updatedImage ? 'YES' : 'NO'
+      });
+      
+      if (updatedImage) {
+        setProfileImage(updatedImage);
+        setImagePreview(updatedImage);
+      }
+      
+      // Refresh from server to ensure consistency
+      if (refreshAuth) {
+        console.log('Refreshing auth data from server...');
+        await refreshAuth();
+      }
+      
+      // Show success with updated fields
+      const updatedFields = [];
+      if (profileData.name !== user?.name) updatedFields.push('Name');
+      if (profileData.email !== user?.email) updatedFields.push('Email');
+      if (profileData.phone !== user?.phone) updatedFields.push('Phone');
+      if (profileData.address !== user?.address) updatedFields.push('Address');
+      if (profileImage !== user?.profileImage) updatedFields.push('Profile Image');
+      
+      const message = updatedFields.length > 0 
+        ? `✅ Updated: ${updatedFields.join(', ')}`
+        : '✅ Profile updated successfully!';
+      
+      setSuccess(message);
+      setTimeout(() => setSuccess(null), 5000);
     } catch (err: any) {
+      console.error('Profile update error:', err);
+      console.error('Error response:', err?.response?.data);
       setError(err?.response?.data?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
@@ -282,7 +353,12 @@ export default function Profile(): JSX.Element {
               justifyContent: 'center'
             }}>
               {imagePreview ? (
-                <img src={imagePreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img 
+                  key={imagePreview} 
+                  src={imagePreview} 
+                  alt="Profile" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
               ) : (
                 <span style={{ fontSize: 48 }}>👤</span>
               )}
