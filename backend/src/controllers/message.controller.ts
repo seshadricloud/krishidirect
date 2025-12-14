@@ -119,7 +119,7 @@ export async function getConversations(req: Request, res: Response) {
     // Group by conversation partner
     const conversationsMap = new Map();
     
-    messages.forEach(message => {
+    messages.forEach((message: any) => {
       const partnerId = message.senderId === currentUserId 
         ? message.recipientId 
         : message.senderId;

@@ -61,19 +61,21 @@ export default function Dashboard(): JSX.Element {
 
   async function handleAcceptOrder(orderId: string) {
     try {
-      await api.patch(`/orders/${orderId}`, { status: 'accepted' });
+      await api.put(`/orders/${orderId}/status`, { status: 'confirmed' });
       loadDashboard();
     } catch (err) {
       console.error('Failed to accept order:', err);
+      alert('Failed to accept order. Please try again.');
     }
   }
 
   async function handleRejectOrder(orderId: string) {
     try {
-      await api.patch(`/orders/${orderId}`, { status: 'rejected' });
+      await api.put(`/orders/${orderId}/status`, { status: 'cancelled' });
       loadDashboard();
     } catch (err) {
       console.error('Failed to reject order:', err);
+      alert('Failed to reject order. Please try again.');
     }
   }
 
