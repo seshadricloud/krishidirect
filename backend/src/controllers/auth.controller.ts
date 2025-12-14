@@ -152,6 +152,9 @@ class AuthController {
                     email: true,
                     name: true,
                     role: true,
+                    phone: true,
+                    address: true,
+                    profileImage: true,
                     createdAt: true
                 }
             });
@@ -177,9 +180,17 @@ class AuthController {
 
             const { name, email, phone, address, profileImage } = req.body;
 
+            console.log('Update profile request:', { userId, name, email, phone: phone?.substring(0, 4) + '****', address: address?.substring(0, 20) });
+
             const db = await getPrisma();
             if (!db) {
                 return res.status(500).json({ message: 'Database connection failed' });
+            }
+
+            // Validate phone number if provided (should be 10 digits)
+            if (phone && !/^[0-9]{10}$/.test(phone)) {
+                console.log('Phone validation failed:', phone);
+                return res.status(400).json({ message: 'Phone number must be exactly 10 digits' });
             }
 
             // Check if email is already taken by another user
@@ -191,10 +202,26 @@ class AuthController {
                     }
                 });
                 if (existingUser) {
+                    console.log('Email already in use:', email);
                     return res.status(400).json({ message: 'Email already in use' });
                 }
             }
 
+            // Check if phone is already taken by another user
+            if (phone) {
+                const existingPhone = await db.user.findFirst({
+                    where: {
+                        phone,
+                        NOT: { id: userId }
+                    }
+                });
+                if (existingPhone) {
+                    console.log('Phone already in use:', phone);
+                    return res.status(400).json({ message: 'Phone number already in use' });
+                }
+            }
+
+            console.log('Updating user in database...');
             const user = await db.user.update({
                 where: { id: userId },
                 data: {
@@ -216,6 +243,7 @@ class AuthController {
                 }
             });
 
+            console.log('Profile updated successfully:', { id: user.id, name: user.name, phone: user.phone });
             res.json(user);
         } catch (err) {
             console.error('Update profile error:', err);

@@ -17,9 +17,9 @@ connectDB();
 // Middleware setup
 app.use(cors()); // Enable CORS for all routes
 app.use(morgan('dev')); // Log requests to the console
-app.use(json()); // Parse JSON request bodies
-app.use(urlencoded({ extended: true })); // Parse URL-encoded request bodies
-app.use(express.json());
+app.use(json({ limit: '10mb' })); // Parse JSON request bodies with larger limit for base64 images
+app.use(urlencoded({ extended: true, limit: '10mb' })); // Parse URL-encoded request bodies
+app.use(express.json({ limit: '10mb' }));
 
 // Set up routes
 app.use('/api', routes);
