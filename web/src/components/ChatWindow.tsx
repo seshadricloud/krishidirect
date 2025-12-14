@@ -86,6 +86,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     setSocket(newSocket);
 
     return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
       newSocket.disconnect();
     };
   }, [recipientId]);
