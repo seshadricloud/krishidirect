@@ -5,6 +5,7 @@ import orderRoutes from './order.routes';
 import notificationRoutes from './notification.routes';
 import priceRoutes from './price.routes';
 import reviewRoutes from './review.routes';
+import messageRoutes from './message.routes';
 
 // Create a router instance
 const router = express.Router();
@@ -31,6 +32,9 @@ router.use('/prices', priceRoutes);
 
 // Use review routes
 router.use('/reviews', reviewRoutes);
+
+// Use message routes
+router.use('/messages', messageRoutes);
 
 // Export the router
 export default router;

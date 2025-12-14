@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import api from '../api';
 import { StarRating } from '../components/StarRating';
 import { ReviewForm } from '../components/ReviewForm';
+import { ChatWindow } from '../components/ChatWindow';
 import { useAuth } from '../hooks/useAuth';
 
 interface Review {
@@ -25,6 +26,7 @@ export default function ProductDetail() {
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const fetchProduct = () => {
     if (id) {
@@ -141,9 +143,20 @@ export default function ProductDetail() {
               <p className="text-gray-700">{product.description || 'No description available'}</p>
             </div>
 
-            <button className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition">
-              Add to Cart
-            </button>
+            <div className="flex gap-3">
+              <button className="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition">
+                Add to Cart
+              </button>
+              {user && user.id !== product.userId && (
+                <button
+                  onClick={() => setShowChat(true)}
+                  className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+                >
+                  <span style={{ fontSize: '20px' }}>💬</span>
+                  Chat with Farmer
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -218,6 +231,16 @@ export default function ProductDetail() {
           </div>
         )}
       </div>
+
+      {/* Chat Window */}
+      {showChat && product.user && (
+        <ChatWindow
+          recipientId={product.user.id}
+          recipientName={product.user.name}
+          productId={product.id}
+          onClose={() => setShowChat(false)}
+        />
+      )}
     </div>
   );
 }

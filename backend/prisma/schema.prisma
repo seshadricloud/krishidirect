@@ -50,6 +50,7 @@ model Product {
   updatedAt   DateTime @updatedAt
   orderItems  OrderItem[]
   reviews     Review[]
+  messages    Message[]
 }
 
 model Order {
@@ -97,14 +98,16 @@ model Notification {
 }
 
 model Message {
-  id         String   @id @default(cuid())
-  senderId   String
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiverId String
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  content    String
-  isRead     Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  senderId    String
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId String
+  recipient   User     @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  content     String
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }
 
 model OrderStatusHistory {
