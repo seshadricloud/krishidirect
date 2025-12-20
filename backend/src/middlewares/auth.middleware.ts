@@ -14,6 +14,8 @@ declare global {
 // Auth middleware verifying JWT and normalizing payload into req.user
 export default function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
+  console.log('Auth middleware - Authorization header:', authHeader ? 'Present' : 'Missing');
+  
   if (!authHeader) return res.status(401).json({ message: 'Unauthorized' });
 
   const token = authHeader.split(' ')[1];
@@ -25,8 +27,10 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     const payload = typeof decoded === 'string' ? { id: decoded } : (decoded as JwtPayload);
     // Ensure req.user shape matches our TS augmentation
     req.user = { id: String((payload as any).id ?? (payload as any).sub), ...(payload as object) };
+    console.log('Auth middleware - User authenticated:', req.user.id);
     return next();
   } catch (err) {
+    console.log('Auth middleware - Token verification failed:', (err as Error).message);
     return res.status(401).json({ message: 'Invalid token' });
   }
 }

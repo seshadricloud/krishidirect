@@ -62,7 +62,7 @@ export default function NotificationBell() {
 
   async function handleMarkAsRead(notificationId: string) {
     try {
-      await api.patch(`/notifications/${notificationId}/read`);
+      await api.put(`/notifications/${notificationId}/read`);
       setNotifications(prev =>
         prev.map(n => n.id === notificationId ? { ...n, isRead: true } : n)
       );
@@ -74,7 +74,7 @@ export default function NotificationBell() {
 
   async function handleMarkAllAsRead() {
     try {
-      await api.patch('/notifications/read-all');
+      await api.put('/notifications/mark-all-read');
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
       setUnreadCount(0);
     } catch (err) {

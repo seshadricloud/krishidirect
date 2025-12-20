@@ -62,20 +62,36 @@ export default function Dashboard(): JSX.Element {
   async function handleAcceptOrder(orderId: string) {
     try {
       await api.put(`/orders/${orderId}/status`, { status: 'confirmed' });
+<<<<<<< HEAD
+=======
+      alert('✅ Order accepted successfully!');
+>>>>>>> feature/otp-based-login
       loadDashboard();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to accept order:', err);
+<<<<<<< HEAD
       alert('Failed to accept order. Please try again.');
+=======
+      alert(err?.response?.data?.message || 'Failed to accept order');
+>>>>>>> feature/otp-based-login
     }
   }
 
   async function handleRejectOrder(orderId: string) {
     try {
       await api.put(`/orders/${orderId}/status`, { status: 'cancelled' });
+<<<<<<< HEAD
+=======
+      alert('❌ Order rejected');
+>>>>>>> feature/otp-based-login
       loadDashboard();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to reject order:', err);
+<<<<<<< HEAD
       alert('Failed to reject order. Please try again.');
+=======
+      alert(err?.response?.data?.message || 'Failed to reject order');
+>>>>>>> feature/otp-based-login
     }
   }
 
