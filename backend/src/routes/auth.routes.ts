@@ -7,6 +7,8 @@ const router = Router();
 // Use bound methods so `this` inside class methods works
 router.post('/register', authController.register.bind(authController));
 router.post('/login', authController.login.bind(authController));
+router.post('/send-otp', authController.sendOtp.bind(authController));
+router.post('/verify-otp', authController.verifyOtp.bind(authController));
 router.get('/me', authMiddleware, authController.getProfile.bind(authController));
 router.patch('/profile', authMiddleware, authController.updateProfile.bind(authController));
 router.patch('/password', authMiddleware, authController.changePassword.bind(authController));
