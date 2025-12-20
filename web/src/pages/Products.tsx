@@ -236,7 +236,7 @@ function ProductCard({ product: p }: { product: Product }) {
     }
 
     if (user.role !== 'buyer') {
-      alert('Only buyers can place orders');
+      alert(`Only buyers can place orders. Your role: ${user.role}. Please create a buyer account to place orders.`);
       return;
     }
 
@@ -250,11 +250,12 @@ function ProductCard({ product: p }: { product: Product }) {
         }]
       });
 
-      alert('Order placed successfully! Check your dashboard for updates.');
+      alert('✅ Order placed successfully! Check your dashboard for updates.');
       setShowOrderForm(false);
       setOrderQuantity(1);
     } catch (err: any) {
-      alert(err?.response?.data?.message || 'Failed to place order');
+      console.error('Order error:', err);
+      alert(err?.response?.data?.message || 'Failed to place order. Please try again.');
     } finally {
       setOrdering(false);
     }
@@ -362,20 +363,42 @@ function ProductCard({ product: p }: { product: Product }) {
             🛒 Place Order
           </button>
         ) : (
-          <div style={{ border: '2px solid #2F9E44', borderRadius: 8, padding: 12 }}>
-            <div style={{ marginBottom: 8, fontSize: 14, fontWeight: 600 }}>
+          <div style={{ 
+            border: '2px solid #2F9E44', 
+            borderRadius: 12, 
+            padding: 16,
+            background: '#f9fafb'
+          }}>
+            <div style={{ 
+              marginBottom: 12, 
+              fontSize: 14, 
+              fontWeight: 600,
+              color: '#374151'
+            }}>
               Order Quantity
             </div>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: 10, 
+              marginBottom: 14,
+              alignItems: 'center'
+            }}>
               <button
                 onClick={() => setOrderQuantity(Math.max(1, orderQuantity - 1))}
                 style={{
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: 6,
+                  width: 36,
+                  height: 36,
+                  padding: 0,
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
                   background: 'white',
                   cursor: 'pointer',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  fontSize: 18,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#6b7280'
                 }}
               >
                 -
@@ -386,44 +409,65 @@ function ProductCard({ product: p }: { product: Product }) {
                 onChange={(e) => setOrderQuantity(Math.max(1, parseFloat(e.target.value) || 1))}
                 style={{
                   flex: 1,
-                  padding: '8px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: 6,
+                  padding: '10px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
                   textAlign: 'center',
-                  fontSize: 14
+                  fontSize: 16,
+                  fontWeight: 600,
+                  minWidth: 0,
+                  boxSizing: 'border-box'
                 }}
               />
               <button
                 onClick={() => setOrderQuantity(Math.min(p.quantity, orderQuantity + 1))}
                 style={{
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: 6,
+                  width: 36,
+                  height: 36,
+                  padding: 0,
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
                   background: 'white',
                   cursor: 'pointer',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  fontSize: 18,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#6b7280'
                 }}
               >
                 +
               </button>
             </div>
-            <div style={{ fontSize: 14, marginBottom: 12, fontWeight: 600 }}>
+            <div style={{ 
+              fontSize: 15, 
+              marginBottom: 14, 
+              fontWeight: 700,
+              color: '#16a34a',
+              padding: '8px 12px',
+              background: '#f0fdf4',
+              borderRadius: 8,
+              textAlign: 'center'
+            }}>
               Total: ₹{(p.price * orderQuantity).toFixed(2)}
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
               <button
                 onClick={handleOrder}
                 disabled={ordering}
                 style={{
                   flex: 1,
-                  padding: '10px',
-                  background: ordering ? '#d1d5db' : 'linear-gradient(135deg, #2F9E44 0%, #4CAF50 100%)',
+                  padding: '12px 16px',
+                  background: ordering ? '#9ca3af' : 'linear-gradient(135deg, #2F9E44 0%, #4CAF50 100%)',
                   color: 'white',
                   border: 'none',
-                  borderRadius: 6,
+                  borderRadius: 8,
                   fontWeight: 600,
                   cursor: ordering ? 'not-allowed' : 'pointer',
-                  fontSize: 13
+                  fontSize: 14,
+                  boxShadow: ordering ? 'none' : '0 2px 8px rgba(47, 158, 68, 0.3)',
+                  minWidth: 0
                 }}
               >
                 {ordering ? 'Placing...' : 'Confirm'}
@@ -434,13 +478,15 @@ function ProductCard({ product: p }: { product: Product }) {
                   setOrderQuantity(1);
                 }}
                 style={{
-                  padding: '10px 16px',
-                  background: '#f3f4f6',
-                  border: 'none',
-                  borderRadius: 6,
+                  padding: '12px 20px',
+                  background: 'white',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
                   fontWeight: 600,
                   cursor: 'pointer',
-                  fontSize: 13
+                  fontSize: 14,
+                  color: '#6b7280',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 Cancel
