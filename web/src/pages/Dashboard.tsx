@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
 
@@ -62,22 +63,22 @@ export default function Dashboard(): JSX.Element {
   async function handleAcceptOrder(orderId: string) {
     try {
       await api.put(`/orders/${orderId}/status`, { status: 'confirmed' });
-      alert('✅ Order accepted successfully!');
+      toast.success('Order accepted successfully!');
       loadDashboard();
     } catch (err: any) {
       console.error('Failed to accept order:', err);
-      alert(err?.response?.data?.message || 'Failed to accept order');
+      toast.error(err?.response?.data?.message || 'Failed to accept order');
     }
   }
 
   async function handleRejectOrder(orderId: string) {
     try {
       await api.put(`/orders/${orderId}/status`, { status: 'cancelled' });
-      alert('❌ Order rejected');
+      toast.error('Order rejected');
       loadDashboard();
     } catch (err: any) {
       console.error('Failed to reject order:', err);
-      alert(err?.response?.data?.message || 'Failed to reject order');
+      toast.error(err?.response?.data?.message || 'Failed to reject order');
     }
   }
 

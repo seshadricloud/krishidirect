@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../api';
 import { useAuth } from '../hooks/useAuth';
+import { ProductCardSkeleton } from '../components/Skeleton';
+import ImageCarousel from '../components/ImageCarousel';
 
 type Product = {
   id: string;
@@ -19,6 +22,7 @@ type Product = {
 };
 
 const CATEGORIES = ['All', 'Vegetables', 'Fruits', 'Grains', 'Pulses', 'Spices', 'Dairy', 'Other'];
+const ITEMS_PER_PAGE = 12;
 
 export default function Products() {
   const { user } = useAuth();
@@ -29,6 +33,7 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState<'all' | 'low' | 'mid' | 'high'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let mounted = true;
@@ -80,13 +85,33 @@ export default function Products() {
     }
 
     setFilteredProducts(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [products, selectedCategory, searchQuery, priceRange]);
 
-  if (loading) return (
-    <div style={{ padding: 40, textAlign: 'center' }}>
-      <p>Loading products...</p>
-    </div>
-  );
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  if (loading) {
+    return (
+      <div style={{ padding: 40, maxWidth: 1200, margin: '0 auto' }}>
+        <h1 style={{ marginBottom: 32 }}>Products Marketplace</h1>
+        
+        {/* Show skeleton grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 24
+        }}>
+          {[1, 2, 3, 4, 5, 6].map(i => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (error) return (
     <div style={{ padding: 40, textAlign: 'center', color: '#EF4444' }}>
@@ -196,8 +221,20 @@ export default function Products() {
       </div>
 
       {/* Results Count */}
-      <div style={{ marginBottom: 16, color: '#6b7280', fontSize: 14 }}>
-        Showing {filteredProducts.length} of {products.length} products
+      <div style={{ 
+        marginBottom: 16, 
+        color: '#6b7280', 
+        fontSize: 14,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <span>
+          Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
+        </span>
+        {totalPages > 1 && (
+          <span style={{ color: '#94A3B8' }}>Page {currentPage} of {totalPages}</span>
+        )}
       </div>
 
       {!filteredProducts.length ? (
@@ -208,15 +245,143 @@ export default function Products() {
           </p>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 24
-        }}>
-          {filteredProducts.map(p => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: 24,
+            marginBottom: 40
+          }}>
+            {currentProducts.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 40
+            }}>
+              {/* Previous Button */}
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                style={{
+                  padding: '10px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
+                  background: currentPage === 1 ? '#f9fafb' : 'white',
+                  color: currentPage === 1 ? '#9ca3af' : '#374151',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => {
+                  if (currentPage !== 1) {
+                    e.currentTarget.style.borderColor = '#22c55e';
+                    e.currentTarget.style.color = '#22c55e';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (currentPage !== 1) {
+                    e.currentTarget.style.borderColor = '#e5e7eb';
+                    e.currentTarget.style.color = '#374151';
+                  }
+                }}
+              >
+                ← Previous
+              </button>
+
+              {/* Page Numbers */}
+              <div style={{ display: 'flex', gap: 6 }}>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
+                  // Show first 2, last 2, and pages around current
+                  const showPage = pageNum === 1 || 
+                                   pageNum === totalPages || 
+                                   (pageNum >= currentPage - 1 && pageNum <= currentPage + 1);
+                  
+                  const showEllipsis = (pageNum === 2 && currentPage > 3) || 
+                                       (pageNum === totalPages - 1 && currentPage < totalPages - 2);
+
+                  if (!showPage && !showEllipsis) return null;
+
+                  if (showEllipsis) {
+                    return <span key={pageNum} style={{ padding: '0 8px', color: '#9ca3af' }}>...</span>;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        border: currentPage === pageNum ? '2px solid #22c55e' : '2px solid #e5e7eb',
+                        borderRadius: 8,
+                        background: currentPage === pageNum ? '#f0fdf4' : 'white',
+                        color: currentPage === pageNum ? '#22c55e' : '#374151',
+                        cursor: 'pointer',
+                        fontWeight: currentPage === pageNum ? 700 : 600,
+                        fontSize: 14,
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseOver={(e) => {
+                        if (currentPage !== pageNum) {
+                          e.currentTarget.style.borderColor = '#22c55e';
+                          e.currentTarget.style.color = '#22c55e';
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (currentPage !== pageNum) {
+                          e.currentTarget.style.borderColor = '#e5e7eb';
+                          e.currentTarget.style.color = '#374151';
+                        }
+                      }}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                style={{
+                  padding: '10px 16px',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: 8,
+                  background: currentPage === totalPages ? '#f9fafb' : 'white',
+                  color: currentPage === totalPages ? '#9ca3af' : '#374151',
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => {
+                  if (currentPage !== totalPages) {
+                    e.currentTarget.style.borderColor = '#22c55e';
+                    e.currentTarget.style.color = '#22c55e';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (currentPage !== totalPages) {
+                    e.currentTarget.style.borderColor = '#e5e7eb';
+                    e.currentTarget.style.color = '#374151';
+                  }
+                }}
+              >
+                Next →
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -230,13 +395,13 @@ function ProductCard({ product: p }: { product: Product }) {
 
   async function handleOrder() {
     if (!user) {
-      alert('Please log in to place an order');
+      toast.error('Please log in to place an order');
       window.location.href = '/login';
       return;
     }
 
     if (user.role !== 'buyer') {
-      alert(`Only buyers can place orders. Your role: ${user.role}. Please create a buyer account to place orders.`);
+      toast.error(`Only buyers can place orders. Your role: ${user.role}`);
       return;
     }
 
@@ -250,12 +415,12 @@ function ProductCard({ product: p }: { product: Product }) {
         }]
       });
 
-      alert('✅ Order placed successfully! Check your dashboard for updates.');
+      toast.success('Order placed successfully! Check your dashboard for updates.');
       setShowOrderForm(false);
       setOrderQuantity(1);
     } catch (err: any) {
       console.error('Order error:', err);
-      alert(err?.response?.data?.message || 'Failed to place order. Please try again.');
+      toast.error(err?.response?.data?.message || 'Failed to place order. Please try again.');
     } finally {
       setOrdering(false);
     }
@@ -268,31 +433,17 @@ function ProductCard({ product: p }: { product: Product }) {
         borderRadius: 16,
         overflow: 'hidden',
         boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-        transition: 'transform 0.2s',
-        cursor: 'pointer'
+        transition: 'transform 0.2s'
       }}
       onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
       onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
     >
-      {p.image ? (
-        <img
-          src={p.image}
-          alt={p.name}
-          style={{ width: '100%', height: 200, objectFit: 'cover' }}
+      <div style={{ padding: 12 }}>
+        <ImageCarousel 
+          images={p.image ? [p.image] : []} 
+          productName={p.name}
         />
-      ) : (
-        <div style={{
-          width: '100%',
-          height: 200,
-          background: 'linear-gradient(135deg, #E8F5E9, #C8E6C9)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 48
-        }}>
-          🌾
-        </div>
-      )}
+      </div>
 
       <div style={{ padding: 20 }}>
         <h3 style={{ margin: '0 0 8px', fontSize: 20, color: '#0F172A' }}>{p.name}</h3>
